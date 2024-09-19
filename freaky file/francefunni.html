@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>18th Century French Name Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #0033cc; 
+            color: #fff; /
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #name {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #generateFiveButton {
+            font-size: 1em;
+        }
+        #namesList {
+            margin-top: 20px;
+            font-size: 1.5em; /* larger text for the results of generating 5 names */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>18th Century French Name Generator</h1>
+    <button onclick="generateName()">Generate Name</button>
+    <button id="generateFiveButton" onclick="generateMultipleNames(5)">Generate 5 Names</button>
+    <button onclick="copyAllNames()">Copy All Names</button>
+    <p id="name">Click the button to get a name</p>
+    <div id="namesList"></div>
+
+    <script>
+        const firstNames = [
+            "Jean", "Louis", "Claude", "François", "Pierre", "Henri", "Jacques", "Étienne", "Antoine", "Charles",
+            "Philippe", "Michel", "André", "René", "Nicolas", "Paul", "Georges", "Bernard", "Armand", "Émile",
+            "Benoît", "Alain", "Christophe", "Didier", "Gilles", "Hugues", "Jules", "Laurent", "Luc", "Maurice",
+            "Olivier", "Pascal", "Raymond", "Serge", "Thierry", "Vincent", "Xavier", "Yves", "Zacharie", "Augustin",
+            "Baptiste", "Clément", "Damien", "Édouard", "Félix", "Gaston", "Hubert", "Isidore", "Julien", "Léon",
+            "Maxime", "Noël", "Olivier", "Patrice", "Quentin", "Roland", "Stéphane", "Théodore", "Urbain", "Valentin",
+            "Wilfried", "Xénon", "Yvan", "Zéphyr", "Adrien", "Basile", "Célestin", "Dimitri", "Ernest", "Fabrice",
+            "Gauthier", "Hector", "Ignace", "Jean-Baptiste", "Kléber", "Léandre", "Matthieu", "Napoléon", "Octave",
+            "Philibert", "Raoul", "Sébastien", "Timothée", "Ulric", "Victor", "Wenceslas", "Xavier", "Yves-Marie", 
+            "Zénon", "Alfred", "Bastien", "Cédric", "Dominique", "Eugène", "Fabien", "Grégoire", "Hervé", "Isaac", 
+            "Jacques-Louis", "Lucien", "Marcel", "Norbert", "Olivien", "Patrice-Louis", "Robert", "Simeon", "Tanguy", 
+            "Ulysse", "Vladimir", "Wandrille", "Xystus", "Yannick", "Zachary", "Achille", "Baudouin", "Constantin", 
+            "David", "Elie", "Frédéric", "Guillaume", "Hippolyte", "Ives", "Jérôme", "Karel", "Leopold", "Maximilien", 
+            "Narcisse", "Orville", "Porthos", "Remi", "Solomon", "Theobald", "Urbain", "Vianney", "Wolfgang", "Xavier-Augustin", 
+            "Yvon", "Zeno", "Albert", "Aristide", "Auguste", "Aurelien", "Aymond", "Barthélémy", "Bastien", "Calixte", "César", 
+            "Constant", "Édouard", "Éloi", "Évariste", "Félix", "Ferdinand", "Frédéric", "Gaston", "Hector", "Hippolyte",
+            "Irénée", "Isidore", "Jérôme", "Lazare", "Louis-Charles", "Lucien", "Marcel", "Marin", "Mathieu", "Maurice", 
+            "Mélchior", "Nicolas", "Octave", "Oscar", "Paul-Émile", "Philippe", "Quentin", "Romain", "Samuel", "Sébastien", 
+            "Sylvain", "Théodore", "Valère", "Victor", "Wladimir", "Yves-Marie", "Zacharie", "Achille", "Baudouin", "Charles", 
+            "David", "Émile", "Frédéric", "Gauthier", "Hervé", "Ives", "Jacques-Louis", "Léandre", "Matthieu", "Napoléon", 
+            "Octave", "Pierre", "Quentin", "Roland", "Simon", "Théophile", "Ulysse", "Valery", "Wandrille", "Xystus",
+            "Élie", "Gaspard", "Jérémie", "Marin", "Mélchior", "Sylvain", "Évrard", "Dorian", "Éloi", "Auguste"
+        ];
+
+        const middleNames = [
+            "Benoît", "Laurent", "Antoine", "Christophe", "Didier", "Étienne", "Félix", "Gilles", "Henri", "Jacques",
+            "Michel", "René", "Alain", "Bernard", "Claude", "Damien", "Emmanuel", "François", "Georges", "Hugues",
+            "Isidore", "Jules", "Luc", "Maurice", "Nicolas", "Olivier", "Pascal", "Quentin", "Raymond", "Serge",
+            "Thierry", "Vincent", "Xavier", "Yves", "Zacharie", "Adrien", "Baptiste", "Clément", "Denis", "Édouard",
+            "Fabien", "Gaston", "Hubert", "Ignace", "Julien", "Léon", "Maxime", "Noël", "Philippe", "Raoul", 
+            "Stéphane", "Théodore", "Ulric", "Valentin", "Wilfried", "Xénon", "Yvan", "Zéphyr", "Alexandre", "Bruno", 
+            "Cédric", "Dominique", "Ernest", "Fabrice", "Grégoire", "Hector", "Isaac", "Jean-Paul", "Kevin", "Lucien", 
+            "Marcel", "Napoléon", "Octave", "Philibert", "Robert", "Sébastien", "Timothée", "Urbain", "Victor", 
+            "Wenceslas", "Xavier-Auguste", "Yves-Marie", "Zachary", "Achille", "Baudouin", "Charles", "David", 
+            "Émile", "Frédéric", "Gauthier", "Hervé", "Ives", "Jacques-Louis", "Léandre", "Matthieu", "Napoléon", 
+            "Octave", "Pierre", "Quentin", "Roland", "Simon", "Théophile", "Ulysse", "Valery", "Wandrille", "Xystus",
+            "Élie", "Gaspard", "Jérémie", "Marin", "Mélchior", "Sylvain", "Évrard", "Dorian", "Éloi", "Auguste"
+        ];
+
+        const lastNames = [
+            "Dupont", "Lefèvre", "Moreau", "Dubois", "Lambert", "Girard", "Roux", "Faure", "Lemoine", "Marchand",
+            "Renard", "Lemoine", "Benoît", "Dumas", "Gosselin", "Garnier", "Tremblay", "Chauvin", "Noyer", "Gosselin",
+            "Marchand", "Deschamps", "Leroux", "Bouvier", "Beaulieu", "Rivière", "Caron", "Boucher", "Clément", "Rousseau",
+            "Leroy", "Benoît", "Lemoine", "Joubert", "Chretien", "Lamoureux", "Arnaud", "Gagnon", "Sénéchal", "Boucher", 
+            "Noyer", "Chaussée", "Jeandel", "Favre", "Marion", "Duchamp", "Fournier", "Laporte", "Clément", "Bernier",
+            "Lambrecht", "Delacroix", "Moulin", "Desjardins", "Gonçalves", "Delorme", "Fleury", "Roussel", "Chauveau",
+            "Giraud", "Gosselin", "Bertin", "Bouchet", "Charpentier", "Vasseur", "Lauderdale", "Bourgeois", "Vernier",
+            "Morel", "La Roche", "Lallier", "Coulon", "Guerin", "Joly", "Michaud", "Leblanc", "Descamps", "Cloutier",
+            "Legrand", "Beaulieu", "Vallée", "Savard", "Dufresne", "Lafontaine", "Boulay", "Laborde", "Perrin", "Bertaux",
+            "Delattre", "Leclerc", "Mallet", "Girard", "Leprince", "Brunet", "Legrain", "Gautier", "Lebrun", "Charron",
+            "Fauchet", "Grondin", "Gosset", "Gonnet", "Perrier", "Blanchard", "Lacroix", "Desmarais", "Lacombe",
+            "Lepage", "Lemaitre", "Maillard", "Drapier", "Gibert", "Sorel", "Tremblay", "Lambert", "Guillet", "Pallier",
+            "Monnier", "Dufour", "Fouquet", "Lescault", "Gravier", "Pailler", "Dumas", "Duchesne", "Renaud", "Louis",
+            "Leblanc", "Lachance", "Brisson", "Lecoq", "Martin", "Joly", "Delatour", "Charpentier", "Leprince", "Fleury",
+            "Clair", "Chalumeau", "Gagnon", "Brenet", "Tessier", "Charbonnel", "Lafarge", "Morin", "Brun", "Graveline",
+            "Lefevre", "Poirier", "Leclair", "Pichon", "Poisson", "Bouvier", "Boudon", "Faucon", "Pailler", "Faure",
+            "Chassagne", "Chevalier", "Sauvage", "Gilbert", "Dufresne", "Dumont", "Baron", "Caron", "Coulon", "Paillard",
+            "Fouet", "Boissel", "Coudon", "Laurent", "Fouquet", "Lavigne", "Maurin", "Delacroix", "Béranger", "Marin",
+            "Chauvin", "Rousseau", "Perron", "Guerin", "Desjardins", "Guillaume", "Sauvage", "Laporte", "Deschamps",
+            "Marion", "Barthélémy", "Vallet", "Gerard", "Jacques", "Barre", "Baron", "Vallée", "Beaumont", "Hollande",
+            "Gougeon", "Thibault", "Roussel", "Courtois", "Sénéchal", "Tremblay", "De Lafayete", "De Anjou", "De Chartres",
+            "De Bordeaux", "De Paris", "De Lyon", "De Normandie", "De Bretagne", "De Toulouse", "De Marseille",
+            "De Rouen", "De Nancy", "De Tours", "De Poitiers", "De La Rochelle", "De Amiens", "De Dijon", "De Clermont",
+            "De Chalon", "De Nevers", "De Beauvais", "De Saumur", "De Limoges", "De Grenoble", "De Blois", "De Angers",
+            "De Alès", "De Avignon", "De Gap", "De Brive", "De Tarbes", "De Montauban", "De Périgueux", "De Langres",
+            "De Sedan", "De Bouillon", "De Cambrai", "De Calais", "De Perpignan", "De Aurillac", "De Cahors", "De Tulle",
+            "De Sarlat", "De Narbonne", "De Carcassonne", "De Millau", "De Cahors", "De Nîmes", "De Lunel",
+            "De Saint-Étienne", "De Vienne", "De Moulins", "De Mâcon", "De Auch", "De Pontoise", "De Laon",
+            "De Charleville", "De Chaumont", "De Louviers", "De Château-Thierry", "De Épernay", "De Châteauroux",
+            "De Dole", "De Plaisir", "De Thouars", "De La Ferté-sous-Jouarre", "De Évreux", "De Saint-Denis",
+            "De Melun", "De Compiègne", "De Montargis", "De La Ferté-sous-Jouarre", "De Compiègne", "De Montargis",
+            "De Saint-Denis", "De Évreux"
+        ];
+
+        function generateName() {
+            // Hide results of "Generate 5 Names" button
+            document.getElementById('namesList').innerHTML = '';
+
+            // Hide previous single name result if exists
+            document.getElementById('name').textContent = '';
+
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const middleName = middleNames[Math.floor(Math.random() * middleNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            document.getElementById('name').textContent = `${firstName} ${middleName} ${lastName}`;
+        }
+
+        function generateMultipleNames(count) {
+            // Hide results of "Generate Name" button
+            document.getElementById('name').textContent = '';
+
+            const names = [];
+            for (let i = 0; i < count; i++) {
+                const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const middleName = middleNames[Math.floor(Math.random() * middleNames.length)];
+                const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                names.push(`${firstName} ${middleName} ${lastName}`);
+            }
+            document.getElementById('namesList').innerHTML = names.join('<br>');
+        }
+
+        function copyAllNames() {
+            const allNames = [];
+            for (let i = 0; i < 5; i++) {
+                const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const middleName = middleNames[Math.floor(Math.random() * middleNames.length)];
+                const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                allNames.push(`${firstName} ${middleName} ${lastName}`);
+            }
+            const textArea = document.createElement('textarea');
+            textArea.value = allNames.join('\n');
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+    </script>
+
+</body>
+</html>
